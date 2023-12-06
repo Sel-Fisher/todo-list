@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% block content %}
+  <h1>TODO list
+  <a href="{% url 'todo:task-create' %}" class="btn btn-primary link-to-page">
+    Add task
+  </a>
+  </h1>
+  <br>
+  {% if task_list %}
+    {% for task in task_list %}
+      <h4>
+        <strong>{{ task }}
+        {% if task.is_completed %}
+          <a href="{% url 'todo:task-complete' task.id %}" class="btn btn-secondary link-to-page">Undo</a>
+          <p class="text-success" style="display: inline">Done</p>
+        {% else %}
+          <a href="{% url 'todo:task-complete' task.id %}" class="btn btn-success link-to-page">Complete this task</a>
+          <p class="text-danger" style="display: inline">Not done</p>
+        {% endif %}
+        </strong>
+      </h4>
+      <p style="display: inline">
+        Created: {{ task.date_of_creation }}
+      </p>
+        {% if task.deadline %}
+          <p style="display: inline;color: brown">Deadline: {{ task.deadline }}</p>
+        {% endif %}
+
+      <h4>
+        Tags:
+        {% for tag in task.tags.all %}
+        {{ tag }}
+        {% endfor %}
+        <a href="{% url 'todo:task-update' task.id %}">Update</a>
+        <a href="{% url 'todo:task-delete' task.id %}">Delete</a>
+      </h4>
+      <hr>
+    {% endfor %}
+  {% else %}
+    <p>There are no task.</p>
+  {% endif %}
+{% endblock %}
